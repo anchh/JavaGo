@@ -18,6 +18,7 @@ func AllEmployees(w http.ResponseWriter, r *http.Request) {
 
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.AllEmployees_Mongo()
 	}
 	if db_name == "sql" {
 		// Connect to SQL
@@ -44,6 +45,7 @@ func InsertEmployee(w http.ResponseWriter, r *http.Request) {
 	db_name := params.Get("db")
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.InsertEmployee_Mongo(employee)
 	} else {
 		// Connect to SQL
 		response = operation.InsertEmployee_SQL(employee)
@@ -64,6 +66,7 @@ func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.DeleteEmployee_Mongo(id)
 	} else {
 		// Connect to SQL
 		response = operation.DeleteEmployee_SQL(id)
@@ -92,6 +95,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	db_name := q_field.Get("db")
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.UpdateEmployee_Mongo(employee)
 	} else {
 		// Connect to SQL
 		response = operation.UpdateEmployee_SQL(employee)
@@ -114,6 +118,7 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.GetEmployee_Mongo(id)
 	} else {
 		// Connect to SQL
 		response = operation.GetEmployee_SQL(id)
@@ -136,6 +141,7 @@ func DeleteEmployeeByName(w http.ResponseWriter, r *http.Request) {
 	name := params["name"]
 	if db_name == "mongo" {
 		// Connect to Mongo
+		response = operation.DeleteEmployeeByName_Mongo(name)
 	} else {
 		// Connect to SQL
 		response = operation.DeleteEmployeeByName_SQL(name)

@@ -12,13 +12,14 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/employee/all", controller.AllEmployees).Methods("GET")
-	router.HandleFunc("/employee/add", controller.InsertEmployee).Methods("POST")
-	router.HandleFunc("/employee/{id}", controller.GetEmployee).Methods("GET")
-	router.HandleFunc("/employee/{id}", controller.UpdateEmployee).Methods("PUT")
-	router.HandleFunc("/employee/remove/id/{id}", controller.DeleteEmployee).Methods("DELETE")
-	router.HandleFunc("/employee/remove/name/{name}", controller.DeleteEmployeeByName).Methods("DELETE")
+	router = router.PathPrefix("/employee").Subrouter()
+	router.HandleFunc("/all", controller.AllEmployees).Methods("GET")
+	router.HandleFunc("/add", controller.InsertEmployee).Methods("POST")
+	router.HandleFunc("/{id}", controller.GetEmployee).Methods("GET")
+	router.HandleFunc("/{id}", controller.UpdateEmployee).Methods("PUT")
+	router.HandleFunc("/remove/id/{id}", controller.DeleteEmployee).Methods("DELETE")
+	router.HandleFunc("/remove/name/{name}", controller.DeleteEmployeeByName).Methods("DELETE")
 	http.Handle("/", router)
-	fmt.Println("Server running at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	fmt.Println("Server running at port 8081")
+	log.Fatal(http.ListenAndServe(":8081", router))
 }

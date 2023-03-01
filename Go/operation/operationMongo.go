@@ -1,0 +1,142 @@
+package operation
+
+import (
+	"context"
+	"log"
+
+	"employee.db/myapp/config"
+	"employee.db/myapp/model"
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+)
+
+// All Employees
+
+var ctx = context.TODO()
+
+func AllEmployees_Mongo() model.Response {
+	var employee model.Employee
+	var response model.Response
+	var arrEmployee []model.Employee
+
+	collection := config.Connect_Mongo()
+
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(nil) {
+		cursor.Decode(&employee)
+		arrEmployee = append(arrEmployee, employee)
+	}
+
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+		response.Data = arrEmployee
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}
+
+// Insert Employee
+func InsertEmployee_Mongo(employee model.Employee) model.Response {
+	var response model.Response
+
+	collection := config.Connect_Mongo()
+
+	id := uuid.New().String()
+	employee.Id = id
+	_, err := collection.InsertOne(ctx, employee)
+
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}
+
+// Get Employee
+func GetEmployee_Mongo(id string) model.Response {
+	var employee model.Employee
+	var response model.Response
+
+	collection := config.Connect_Mongo()
+	err := collection.FindOne(nil, model.Employee{Id: id}).Decode(&employee)
+
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+		response.Data = append(response.Data, employee)
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}
+
+// Update Employee
+func UpdateEmployee_Mongo(employee model.Employee) model.Response {
+	var response model.Response
+
+	collection := config.Connect_Mongo()
+	id := employee.Id
+	name := employee.Name
+	email := employee.Email
+	phone := employee.Phone
+	address := employee.Address
+	salary := employee.Salary
+
+	filter := bson.M{"id": id}
+	update := bson.M{"$set": bson.M{"name": name, "email": email, "phone": phone, "address": address, "salary": salary}}
+
+	_, err := collection.UpdateOne(ctx, filter, update)
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}
+
+// Delete Employee
+func DeleteEmployee_Mongo(id string) model.Response {
+	var response model.Response
+
+	collection := config.Connect_Mongo()
+	_, err := collection.DeleteOne(ctx, bson.M{"id": id})
+
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}
+
+// Delete Employee by name
+func DeleteEmployeeByName_Mongo(name string) model.Response {
+	var response model.Response
+
+	collection := config.Connect_Mongo()
+
+	_, err := collection.DeleteOne(ctx, bson.M{"name": name})
+
+	if err == nil {
+		response.Status = 200
+		response.Message = "Success"
+	} else {
+		response.Status = 404
+		response.Message = "Not Found"
+	}
+	return response
+}

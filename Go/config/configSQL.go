@@ -16,16 +16,3 @@ func Connect_SQL() *sql.DB {
 	}
 	return db
 }
-
-// func Connect_Mongo() {
-// 	dbDriver := "mysql"
-// 	dbUser := "root"
-// 	dbPass := "anchal31"
-// 	dbName := "employees"
-
-// 	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
-// 	return db
-// }
