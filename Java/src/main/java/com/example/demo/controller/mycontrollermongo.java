@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.rep.EmployeeRepository;
 import com.example.demo.models.Employee;
+import com.example.demo.models.EmployeeSQL;
+import com.example.demo.rep_mongo.EmployeeRepository;
+import com.example.demo.rep_mysql.EmployeeRepositoryMySQL;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,6 +31,7 @@ public class mycontrollermongo {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    private EmployeeRepositoryMySQL employeeRepositoryMySQL;
 
 
     @GetMapping("/all")
@@ -35,19 +39,37 @@ public class mycontrollermongo {
         if (db.equals("mongo")) {
             List <Employee> employees = employeeRepository.findAll();
             return ResponseEntity.ok(employees);
-        } else {
-            return ResponseEntity.ok("No data");
         }
-
+        else if (db.equals("mysql")) {
+            // functionality for mysql
+            List <EmployeeSQL> employees = employeeRepositoryMySQL.findAll();
+            return ResponseEntity.ok(employees);
+        }
+        else {
+            return ResponseEntity.ok("not a valid db");
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> employee_handler(@PathVariable("id") String id, @RequestParam(value = "db", required=false, defaultValue="all") String db) {
         if (db.equals("mongo")) {
             Optional<Employee> employees = employeeRepository.findById(id);
-            return ResponseEntity.ok(employees);
-        } else {
-            return ResponseEntity.ok(null);
+            if (employees.isPresent()) {
+                return ResponseEntity.ok(employees);
+            } else {
+                return ResponseEntity.ok("not a valid id");
+            }
+        } else if (db.equals("mysql")) {
+            // functionality for mysql
+            Optional<EmployeeSQL> employee = employeeRepositoryMySQL.findById(id);
+            if (employee.isPresent()) {
+                return ResponseEntity.ok(employee);
+            } else {
+                return ResponseEntity.ok("not a valid id");
+            }
+        }
+        else {
+            return ResponseEntity.ok("not a valid db");
         }
     }
 
@@ -62,8 +84,18 @@ public class mycontrollermongo {
             } catch (Exception e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } else {
-            return ResponseEntity.ok(null);
+        } else if (db.equals("mysql")) {
+            // functionality for mysql
+            try {
+                String id = UUID.randomUUID().toString();
+                EmployeeSQL _employee = employeeRepositoryMySQL.save(new EmployeeSQL(id, employee.getName(), employee.getEmail(), employee.getPhone(), employee.getAddress(), employee.getSalary()));
+                return ResponseEntity.ok(_employee);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return ResponseEntity.ok("not a valid db");
         }
     }
 
@@ -84,8 +116,24 @@ public class mycontrollermongo {
                 return ResponseEntity.ok(null);
             }
         }
+        else if (db.equals("mysql")) {
+            // functionality for mysql
+            Optional<EmployeeSQL> _employeedetails = employeeRepositoryMySQL.findById(id);
+            if (_employeedetails.isPresent()){
+                employeeRepositoryMySQL.deleteById(id);
+                EmployeeSQL _employee = _employeedetails.get();
+                _employee.setName(employee.getName());
+                _employee.setEmail(employee.getEmail());
+                _employee.setPhone(employee.getPhone());
+                _employee.setAddress(employee.getAddress());
+                _employee.setSalary(employee.getSalary());
+                return ResponseEntity.ok(employeeRepositoryMySQL.save(_employee));
+            } else {
+                return ResponseEntity.ok(null);
+            }
+        }
         else {
-            return ResponseEntity.ok(null);
+            return ResponseEntity.ok("not a valid db");
         }
 
         }
@@ -106,8 +154,23 @@ public class mycontrollermongo {
                 return ResponseEntity.ok("not found");
               }
             }
+        else if (db.equals("mysql")) {
+            // functionality for mysql
+            try {
+                Optional <EmployeeSQL> _employee = employeeRepositoryMySQL.findById(id);
+                if (_employee.isPresent()) {
+                    employeeRepository.deleteById(id);
+                    return ResponseEntity.ok("deleted");
+                } else {
+                    return ResponseEntity.ok("not found");
+                }
+            }
+               catch (Exception e) {
+                return ResponseEntity.ok("not found");
+              }
+        }
         else {
-            return ResponseEntity.ok("sql del");
+            return ResponseEntity.ok("not a valid db");
         }
     }
 
@@ -127,8 +190,23 @@ public class mycontrollermongo {
                 return ResponseEntity.ok("not found");
               }
             }
+        else if (db.equals("mysql")) {
+            // functionality for mysql
+            try {
+                Optional <EmployeeSQL> _employee = employeeRepositoryMySQL.findByNameIgnoreCase(name);
+                if (_employee.isPresent()) {
+                    employeeRepositoryMySQL.deleteByName(name);
+                    return ResponseEntity.ok("deleted");
+                } else {
+                    return ResponseEntity.ok("not found");
+                }
+            }
+               catch (Exception e) {
+                return ResponseEntity.ok("not found");
+              }
+        }
         else {
-            return ResponseEntity.ok("sql del");
+            return ResponseEntity.ok("not a valid db");
         }
     }
 }

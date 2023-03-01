@@ -1,23 +1,30 @@
 package com.example.demo.models;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
+import javax.persistence.*;
 
-@Document(collection = "employee")
-public class Employee {
+@Entity
+@Table(name = "employees")
+public class EmployeeSQL {
     @Id
+    @Column(name = "id")
     private String id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
     private String phone;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "salary")
     private int salary;
 
-    public Employee(String id, String name, String email, String phone, String address, int salary) {
+    public EmployeeSQL(String id, String name, String email, String phone, String address, int salary) {
         this.id = id;
         this.name = name;
         this.email = email;
