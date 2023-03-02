@@ -8,6 +8,7 @@ import (
 	"employee.db/myapp/model"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // All Employees
@@ -67,9 +68,14 @@ func GetEmployee_Mongo(id string) model.Response {
 	var response model.Response
 
 	collection := config.Connect_Mongo()
-	err := collection.FindOne(nil, model.Employee{Id: id}).Decode(&employee)
+	print(id)
+	filter := bson.M{"id": id}
+	opts := options.FindOne()
+	opts.SetProjection(bson.M{"_id": 0})
+	ans := collection.FindOne(ctx, filter, opts).Decode(&employee)
 
-	if err == nil {
+	// employee = model.Employee{Id: employee.Id, Name: employee.Name, Email: employee.Email, Phone: employee.Phone, Address: employee.Address, Salary: employee.Salary}
+	if ans == nil {
 		response.Status = 200
 		response.Message = "Success"
 		response.Data = append(response.Data, employee)

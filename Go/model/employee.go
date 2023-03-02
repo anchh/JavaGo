@@ -7,6 +7,7 @@ type Employee struct {
 	Phone   string `json:"phone"`
 	Address string `json:"address"`
 	Salary  int    `json:"salary"`
+
 }
 
 type Response struct {
