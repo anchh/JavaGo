@@ -1,6 +1,5 @@
 package operation
 
-
 import (
 	"context"
 	"log"
