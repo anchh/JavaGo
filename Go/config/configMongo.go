@@ -20,6 +20,6 @@ func Connect_Mongo() *mongo.Collection {
 		log.Fatal(err)
 	}
 
-	collection := client.Database("employees").Collection("employees")
+	collection := client.Database("employees").Collection("employee")
 	return collection
 }
