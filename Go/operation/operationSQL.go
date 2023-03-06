@@ -1,5 +1,6 @@
 package operation
 
+
 import (
 	"context"
 	"log"
@@ -9,7 +10,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func AllEmployees_SQL() model.Response {
+type OperationSQL struct {
+}
+
+func (os *OperationSQL) AllEmployees() model.Response {
 	var employee model.Employee
 	var response model.Response
 	var arrEmployee []model.Employee
@@ -43,7 +47,7 @@ func AllEmployees_SQL() model.Response {
 }
 
 // Insert Employee
-func InsertEmployee_SQL(employee model.Employee) model.Response {
+func (os *OperationSQL) InsertEmployee(employee model.Employee) model.Response {
 	var response model.Response
 
 	db := config.Connect_SQL()
@@ -72,7 +76,7 @@ func InsertEmployee_SQL(employee model.Employee) model.Response {
 }
 
 // Delete Employee
-func DeleteEmployee_SQL(id string) model.Response {
+func (os *OperationSQL) DeleteEmployee(id string) model.Response {
 	var response model.Response
 
 	db := config.Connect_SQL()
@@ -94,7 +98,7 @@ func DeleteEmployee_SQL(id string) model.Response {
 }
 
 // Update Employee
-func UpdateEmployee_SQL(employee model.Employee) model.Response {
+func (os *OperationSQL) UpdateEmployee(employee model.Employee) model.Response {
 	var response model.Response
 
 	db := config.Connect_SQL()
@@ -123,7 +127,7 @@ func UpdateEmployee_SQL(employee model.Employee) model.Response {
 }
 
 // Get Employee by ID
-func GetEmployee_SQL(id string) model.Response {
+func (os *OperationSQL) GetEmployee(id string) model.Response {
 	var employee model.Employee
 	var response model.Response
 
@@ -147,7 +151,7 @@ func GetEmployee_SQL(id string) model.Response {
 }
 
 // Delete Employee by name
-func DeleteEmployeeByName_SQL(name string) model.Response {
+func (os *OperationSQL) DeleteEmployeeByName(name string) model.Response {
 	var response model.Response
 
 	db := config.Connect_SQL()
