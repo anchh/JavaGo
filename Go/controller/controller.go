@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"employee.db/myapp/model"
-	"employee.db/myapp/operation"
+	o "employee.db/myapp/operation"
 	"github.com/gorilla/mux"
 )
 
@@ -18,11 +18,13 @@ func AllEmployees(w http.ResponseWriter, r *http.Request) {
 
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.AllEmployees_Mongo()
+		m_op := &o.OperationMongo{}
+		response = m_op.AllEmployees()
 	}
 	if db_name == "sql" {
 		// Connect to SQL
-		response = operation.AllEmployees_SQL()
+		s_op := &o.OperationSQL{}
+		response = s_op.AllEmployees()
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -45,10 +47,12 @@ func InsertEmployee(w http.ResponseWriter, r *http.Request) {
 	db_name := params.Get("db")
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.InsertEmployee_Mongo(employee)
+		m_op := &o.OperationMongo{}
+		response = m_op.InsertEmployee(employee)
 	} else {
 		// Connect to SQL
-		response = operation.InsertEmployee_SQL(employee)
+		s_op := &o.OperationSQL{}
+		response = s_op.InsertEmployee(employee)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -66,10 +70,12 @@ func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.DeleteEmployee_Mongo(id)
+		m_op := &o.OperationMongo{}
+		response = m_op.DeleteEmployee(id)
 	} else {
 		// Connect to SQL
-		response = operation.DeleteEmployee_SQL(id)
+		s_op := &o.OperationSQL{}
+		response = s_op.DeleteEmployee(id)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -95,10 +101,12 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	db_name := q_field.Get("db")
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.UpdateEmployee_Mongo(employee)
+		m_op := &o.OperationMongo{}
+		response = m_op.UpdateEmployee(employee)
 	} else {
 		// Connect to SQL
-		response = operation.UpdateEmployee_SQL(employee)
+		s_op := &o.OperationSQL{}
+		response = s_op.UpdateEmployee(employee)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -118,10 +126,12 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.GetEmployee_Mongo(id)
+		m_op := &o.OperationMongo{}
+		response = m_op.GetEmployee(id)
 	} else {
 		// Connect to SQL
-		response = operation.GetEmployee_SQL(id)
+		s_op := &o.OperationSQL{}
+		response = s_op.GetEmployee(id)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -141,10 +151,12 @@ func DeleteEmployeeByName(w http.ResponseWriter, r *http.Request) {
 	name := params["name"]
 	if db_name == "mongo" {
 		// Connect to Mongo
-		response = operation.DeleteEmployeeByName_Mongo(name)
+		m_op := &o.OperationMongo{}
+		response = m_op.DeleteEmployeeByName(name)
 	} else {
 		// Connect to SQL
-		response = operation.DeleteEmployeeByName_SQL(name)
+		s_op := &o.OperationSQL{}
+		response = s_op.DeleteEmployeeByName(name)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

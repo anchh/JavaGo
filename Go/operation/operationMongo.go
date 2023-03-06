@@ -11,11 +11,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// All Employees
-
 var ctx = context.TODO()
 
-func AllEmployees_Mongo() model.Response {
+type OperationMongo struct {
+}
+
+// All Employees
+func (o *OperationMongo) AllEmployees() model.Response {
 	var employee model.Employee
 	var response model.Response
 	var arrEmployee []model.Employee
@@ -43,7 +45,7 @@ func AllEmployees_Mongo() model.Response {
 }
 
 // Insert Employee
-func InsertEmployee_Mongo(employee model.Employee) model.Response {
+func (o *OperationMongo) InsertEmployee(employee model.Employee) model.Response {
 	var response model.Response
 
 	collection := config.Connect_Mongo()
@@ -63,12 +65,11 @@ func InsertEmployee_Mongo(employee model.Employee) model.Response {
 }
 
 // Get Employee
-func GetEmployee_Mongo(id string) model.Response {
+func (o *OperationMongo) GetEmployee(id string) model.Response {
 	var employee model.Employee
 	var response model.Response
 
 	collection := config.Connect_Mongo()
-	print(id)
 	filter := bson.M{"id": id}
 	opts := options.FindOne()
 	opts.SetProjection(bson.M{"_id": 0})
@@ -87,7 +88,7 @@ func GetEmployee_Mongo(id string) model.Response {
 }
 
 // Update Employee
-func UpdateEmployee_Mongo(employee model.Employee) model.Response {
+func (o *OperationMongo) UpdateEmployee(employee model.Employee) model.Response {
 	var response model.Response
 
 	collection := config.Connect_Mongo()
@@ -113,7 +114,7 @@ func UpdateEmployee_Mongo(employee model.Employee) model.Response {
 }
 
 // Delete Employee
-func DeleteEmployee_Mongo(id string) model.Response {
+func (o *OperationMongo) DeleteEmployee(id string) model.Response {
 	var response model.Response
 
 	collection := config.Connect_Mongo()
@@ -130,7 +131,7 @@ func DeleteEmployee_Mongo(id string) model.Response {
 }
 
 // Delete Employee by name
-func DeleteEmployeeByName_Mongo(name string) model.Response {
+func (o *OperationMongo) DeleteEmployeeByName(name string) model.Response {
 	var response model.Response
 
 	collection := config.Connect_Mongo()
